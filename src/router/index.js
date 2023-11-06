@@ -126,26 +126,32 @@ export const asyncRouterMap = [
     component: Layout,
     alwaysShow: true,
     name: 'MPSDemo',
-    meta: { title: 'MPS管理', icon: 'el-icon-s-platform' },
+    meta: { title: 'MPS管理', icon: 'analytics_graph' },
     children: [
       {
         path: 'MPSKanban',
         name: 'MPSKanban',
         component: () => import('@/views/MPSDemo/MPSKanban/index'),
-        meta: { title: 'MPSKanban', icon: 'el-icon-data-analysis' }
+        meta: { title: 'MPSKanban', icon: 'analytics_graph' }
       },
-      // {
-      //   path: 'EWIFile',
-      //   name: 'EWIFile',
-      //   component: () => import('@/views/demo/EWIFile/index'),
-      //   meta: { title: 'EWIFile管理', icon: 'el-icon-s-cooperation' }
-      // },
-      // {
-      //   path: 'previewDemo',
-      //   name: 'previewDemo',
-      //   component: () => import('@/views/demo/previewDemo/index'),
-      //   meta: { title: 'EWI浏览', icon: 'el-icon-s-order' }
-      // }, 
+      {
+        path: 'PickOrderHistory',
+        name: 'PickOrderHistory',
+        component: () => import('@/views/MPSDemo/PickOrderHistory/index'),
+        meta: { title: '物料需求订单查询', icon: 'analystics_business' }
+      },
+      {
+        path: 'PickupReport',
+        name: 'PickupReport',
+        component: () => import('@/views/MPSDemo/PickupReport/index'),
+        meta: { title: '配料记录查询', icon: 'songtianxing' }
+      }, 
+      {
+        path: 'ASMSetupCenter',
+        name: 'ASMSetupCenter',
+        component: () => import('@/views/MPSDemo/ASMSetupCenter/index'),
+        meta: { title: 'ASM上料信息查询', icon: 'songtianxing' }
+      }, 
     ]
   },
   {

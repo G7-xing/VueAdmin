@@ -54,6 +54,7 @@
                                 <template slot-scope="scope">
                                     <span v-if="scope.row.pickOrderType == '4'">Auto自动产生</span>
                                     <span v-else-if="scope.row.pickOrderType == '5'">Manual人工呼叫</span>
+                                    <span v-else>Not Defined</span>
                                 </template>
                             </el-table-column>
 

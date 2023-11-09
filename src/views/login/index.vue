@@ -4,7 +4,11 @@
             <div class="site-content">
                 <div class="brand-info">
                     <h2 class="brand-info__text">Veoneer Production IT System</h2>
-                    <p class="brand-info__intro">目前支持EWI在线预览模块</p>
+                    <p class="brand-info__intro">目前支持模块：</p>
+                    <p class="brand-info__intro">{{ "\u3000" }}EWI在线预览</p>
+                    <p class="brand-info__intro">{{ "\u3000" }}考勤登记</p>
+                    <p class="brand-info__intro">{{ "\u3000" }}CT报表</p>
+                    <p class="brand-info__intro">{{ "\u3000" }}MPS看板及物料查询</p>
                 </div>
                 <div class="login-main">
                     <el-form ref="loginForm" :model="loginForm" class="login-form" auto-complete="on" label-position="left">
@@ -33,7 +37,7 @@
                         <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
                             @click.native.prevent="handleLogin">Login</el-button>
                     </el-form>
-                    <div style="text-align: center; margin-top: 50px;color: darkcyan;">版权所有 2022 Veoneer Production IT MES Team</div>
+                    <div style="text-align: center; margin-top: 50px; margin-left: 70px; color: darkcyan;">版权所有 2023-2024 Veoneer Production IT MES Team</div>
                 </div>
             </div>
 
@@ -122,7 +126,9 @@ export default {
                             });
                             this.loading = false;
                         })
-                        .catch(() => {
+                        .catch((err) => {
+                            this.$message
+                                .error(err || "登录失败，请重试")
                             this.loading = false;
                         });
                 } else {
@@ -143,7 +149,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
@@ -189,7 +195,7 @@ $cursor: #fff;
     }
 }
 </style>
-<style lang="scss">
+<style lang="scss" scoped>
 .site-wrapper.site-page--login {
     position: absolute;
     top: 0;
@@ -261,7 +267,8 @@ $cursor: #fff;
 }
 
 </style>
-<style lang="scss" scoped>$bg: #2d3a4b;
+<style lang="scss" scoped>
+$bg: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
@@ -270,9 +277,10 @@ $light_gray: #eee;
         position: relative;
         width: 520px;
         max-width: 100%;
-        padding: 160px 35px 0;
+        padding: 0px 50px 0px 124px;
         margin: 0 auto;
         overflow: hidden;
+        margin-top: -70px;
     }
 
     .tips {
@@ -315,6 +323,7 @@ $light_gray: #eee;
         color: $dark_gray;
         cursor: pointer;
         user-select: none;
+        
     }
 
 }

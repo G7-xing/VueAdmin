@@ -20,6 +20,13 @@ export function fetchHistoryList(data) {
     data
   })
 }
+export function expandRowList(pickOrderId) {
+  return request({
+    url: '/MPSKanban/expandRowList',
+    method: 'get',
+    params: {pickOrderId} 
+  })
+}
 //#endregion
 
 //#region 配料记录api

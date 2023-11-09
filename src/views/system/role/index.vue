@@ -282,15 +282,14 @@ export default {
                     this.menuTreeList = treeDataTranslate(res.data, 'id');
                     listMenuByRole(this.roleId).then(response => {
                         let menuList = response.data;
-                        let checkedMenuIds = [];
                         if (menuList != null && menuList.length > 0) {
                             for (let i = 0; i < menuList.length; i++) {
-                                checkedMenuIds.push(menuList[i].menuId);
+                                this.$nextTick(()=>{
+                                    this.$refs.tree.setChecked(menuList[i].menuId, true, false);
+                                })
                             }
                         }
-                        this.$refs.tree.setCheckedKeys(checkedMenuIds);
                     })
-
                 } else {
                     this.$message.error(res.msg)
                 }
@@ -298,7 +297,12 @@ export default {
             });
         },
         handleSave() {
+            debugger
             let checkedNodes = this.$refs.tree.getCheckedNodes();
+            if (this.$refs.tree.getHalfCheckedNodes().length !== 0){
+                for (let i = 0; i < this.$refs.tree.getHalfCheckedNodes().length; i++)
+                checkedNodes.push(this.$refs.tree.getHalfCheckedNodes()[i]);
+            }
             let checkedMenuIds = new Set();
             if (checkedNodes != null && checkedNodes.length > 0) {
                 for (let i = 0; i < checkedNodes.length; i++) {

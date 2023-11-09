@@ -45,13 +45,19 @@ const actions = {
    
     const { UserName, Password } = userInfo
     return new Promise((resolve, reject) => {
+      
       login({ UserName: UserName.trim(), password: Password }).then(response => {
-        const { dynamicData } = response
-        commit('SET_TOKEN', dynamicData.token)
-        setToken(dynamicData.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
+        //debugger
+        if (response.success) {
+          
+          const { dynamicData } = response
+          commit('SET_TOKEN', dynamicData.token)
+          setToken(dynamicData.token)
+          resolve()
+        } else {
+          reject(response.msg)
+        }
+        
       })
     })
   },

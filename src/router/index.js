@@ -132,7 +132,7 @@ export const asyncRouterMap = [
         path: 'MPSKanban',
         name: 'MPSKanban',
         component: () => import('@/views/MPSDemo/MPSKanban/index'),
-        meta: { title: 'MPSKanban', icon: 'analytics_graph' }
+        meta: { title: 'MPSKanban', icon: 'bar_chart' }
       },
       {
         path: 'PickOrderHistory',
@@ -150,7 +150,7 @@ export const asyncRouterMap = [
         path: 'ASMSetupCenter',
         name: 'ASMSetupCenter',
         component: () => import('@/views/MPSDemo/ASMSetupCenter/index'),
-        meta: { title: 'ASM上料信息查询', icon: 'songtianxing' }
+        meta: { title: 'ASM上料信息查询', icon: 'bars_connectivity' }
       }, 
     ]
   },

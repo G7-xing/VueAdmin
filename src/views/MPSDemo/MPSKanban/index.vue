@@ -187,17 +187,10 @@ export default {
 }
 </script>
   
-<style lang="scss" >
-.evenRow {
-    background: #0c385e4b !important;
-}
-
-.oddRow {
-    background: #305760 !important;
-}
+<style lang="scss" scoped>
 
 .brand-container {
-    position: fixed;
+    position: relative;
     width: 100%;
     height: 100%;
     background: #000;
@@ -497,58 +490,6 @@ export default {
 
     }
 
-}
-
-@-webkit-keyframes rotate {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-@keyframes rotate {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-@-webkit-keyframes rotate1 {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50%, -50%) rotate(-360deg);
-    }
-}
-
-@keyframes rotate1 {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50%, -50%) rotate(-360deg);
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    html {
-        font-size: 42px !important;
-    }
-}
-
-@media screen and (min-width: 1920) {
-    html {
-        font-size: 80px !important;
-    }
 }
 </style>
   

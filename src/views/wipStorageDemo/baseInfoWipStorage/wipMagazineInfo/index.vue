@@ -9,7 +9,7 @@
             <div style="margin-top: 15px">
                 <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
                     <el-form-item label="输入搜索：">
-                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="线体名称" clearable @keypress.enter.native="handleSearchList()"></el-input>
+                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="线体名称" clearable></el-input>
                     </el-form-item>
                     <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
                         查询搜索
@@ -117,7 +117,7 @@ const defaultLine = {
     updateBy: ''
 };
 export default {
-    name: 'LineManage',
+    name: 'wipMagazineInfo',
     data() {
         return {
             listQuery: Object.assign({}, defaultListQuery),

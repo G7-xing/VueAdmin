@@ -7,16 +7,16 @@
             </el-form-item>
         </el-form>
 
-        <el-table :data="dataList" row-key="id" border style="width: 100%;" size="mini">
-            <el-table-column prop="menuName" header-align="center" align="center"
+        <el-table :data="dataList" row-key="id" border style="width: 100%;" size="mini" :header-cell-style="{ background:'#304156',color:'#FFFFFF','font-size':'initial'}">
+            <el-table-column prop="menuName" header-align="center"
                 label="菜单名称"></el-table-column>
             <el-table-column prop="parentName" header-align="center" align="center"
                 label="上级菜单"></el-table-column>
-            <el-table-column prop="menuURL" header-align="center" align="center"  :show-overflow-tooltip="true"
+            <el-table-column prop="menuURL" header-align="center"  width="650px" :show-overflow-tooltip="true"
                 label="菜单URL"></el-table-column>
-            <el-table-column prop="name" header-align="center" align="center"  :show-overflow-tooltip="true"
+            <el-table-column prop="name" header-align="center"   :show-overflow-tooltip="true"
                 label="前端菜单路由名称"></el-table-column>
-            <el-table-column prop="sort" header-align="center" align="center" label="排序号"></el-table-column>
+            <!-- <el-table-column prop="sort" header-align="center" align="center" label="排序号"></el-table-column> -->
             <el-table-column fixed="right" header-align="center" align="center"  label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" icon="el-icon-edit" size="small"

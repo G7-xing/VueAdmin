@@ -4,9 +4,14 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import Vant from 'vant';
+import 'vant/lib/index.css';
+
+
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
+
 
 import App from './App'
 import store from './store'
@@ -27,7 +32,7 @@ import 'vxe-table/lib/style.css'
 
 Vue.use(VXETable)
 Vue.use(dataV)
-
+Vue.use(Vant);
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

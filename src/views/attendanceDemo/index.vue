@@ -78,8 +78,8 @@
         <!-- 对话框 -->
         <el-dialog :title="isEdit ? '编辑' : '新增'" :visible.sync="dialogVisible" width="40%">
             <el-form :model="dataFrom" ref="dataFrom" label-width="150px" size="medium">
-                <el-form-item label="姓名:" class="item-class">{{ dataFrom.userName }}</el-form-item>
-                <el-form-item label="选中日期:" class="item-class"> {{ dataFrom.attendanceDate }}</el-form-item>
+                <el-form-item label="姓名:" >{{ dataFrom.userName }}</el-form-item>
+                <el-form-item label="选中日期:" > {{ dataFrom.attendanceDate }}</el-form-item>
                 <el-form-item label="缺勤类型:">
                     <el-radio-group v-model="dataFrom.attendanceType">
                         <el-radio-button :label="'V'">V--休假</el-radio-button>
@@ -658,7 +658,7 @@ export default {
 }
 
 .item-class {
-    display: inline-block;
+    display: inline-table;
     margin-top: 15px;
     margin-left: 10px;
 }

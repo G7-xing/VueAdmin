@@ -9,12 +9,12 @@
             <div style="margin-top: 15px">
                 <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
                     <el-form-item label="输入搜索：">
-                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="线体名称" clearable @keypress.enter.native="handleSearchList()"></el-input>
+                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="库位名称" clearable></el-input>
                     </el-form-item>
-                    <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
+                    <el-button  type="primary" @click="handleSearchList()" size="small">
                         查询搜索
                     </el-button>
-                    <el-button style="float:right;margin-right: 15px" @click="handleResetSearch()" size="small">
+                    <el-button  @click="handleResetSearch()" size="small">
                         重置
                     </el-button>
                 </el-form>
@@ -30,10 +30,10 @@
                 v-loading="listLoading" border>
                 <el-table-column label="序号" align="center" type="index">
                 </el-table-column>
-                <el-table-column label="线体名称" align="center">
+                <el-table-column label="库位名称" align="center">
                     <template slot-scope="scope">{{ scope.row.lineName }}</template>
                 </el-table-column>
-                <el-table-column label="线体分类" align="center">
+                <el-table-column label="库位分类" align="center">
                     <template slot-scope="scope">{{ scope.row.lineCategory }}</template>
                 </el-table-column>
                 <el-table-column label="添加时间" align="center">
@@ -74,13 +74,13 @@
                 :page-size="listQuery.pageSize" :page-sizes="[10, 15, 20]" :total="total">
             </el-pagination>
         </div>
-        <el-dialog :title="isEdit ? '编辑线体' : '添加线体'" :visible.sync="dialogVisible" width="40%">
+        <el-dialog :title="isEdit ? '编辑库位' : '添加库位'" :visible.sync="dialogVisible" width="40%">
             <el-form :model="line" ref="lineForm" label-width="150px" size="small">
-                <el-form-item label="线体名称：">
+                <el-form-item label="库位名称：">
                     <el-input v-model="line.lineName" width="100%"></el-input>
                 </el-form-item>
-                <el-form-item label="线体分类：">
-                    <el-select v-model="line.lineCategory" placeholder="请选择线体分类">
+                <el-form-item label="库位分类：">
+                    <el-select v-model="line.lineCategory" placeholder="请选择库位分类">
                         <el-option v-for="item in lineCategoryList" :key="item.value" :label="item.label"
                             :value="item.label">
                         </el-option>
@@ -117,7 +117,7 @@ const defaultLine = {
     updateBy: ''
 };
 export default {
-    name: 'LineManage',
+    name: 'wipLoactionStoreInfo',
     data() {
         return {
             listQuery: Object.assign({}, defaultListQuery),

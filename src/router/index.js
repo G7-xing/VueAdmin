@@ -122,6 +122,59 @@ export const constantRoutes = [
 export const asyncRouterMap = [
  
   {
+    path: '/wipStorageDemo',
+    component: Layout,
+    alwaysShow: true,
+    name: 'wipStorageDemo',
+    meta: { title: 'WIP仓储管理', icon: 'warehouse_icon' },
+    children: [
+      {
+        path: 'actionWipStorage',
+        name: 'actionWipStorage',
+        component: () => import('@/views/wipStorageDemo/actionWipStorage/index'),
+        meta: { title: '仓储工作台', icon: 'warehouse_keep_icon' }
+      },
+      {
+        path: 'queryWipstorage',
+        name: 'queryWipstorage',
+        component: () => import('@/views/wipStorageDemo/queryWipstorage/index'),
+        meta: { title: '在库信息查询', icon: 'warehouse_query_icon' }
+      },
+      {
+        path: 'baseInfoWipStorage',
+        name: 'baseInfoWipStorage',
+        component: ()=>import('@/views/wipStorageDemo/baseInfoWipStorage'),
+        meta: { title: '基础信息维护', icon: 'warehouse_info_icon' },
+        children:[
+          {
+            path: 'wipMagazineInfo',
+            name: 'wipMagazineInfo',
+            component: () => import('@/views/wipStorageDemo/baseInfoWipStorage/wipMagazineInfo/index'),
+            meta: { title: 'Magazine信息', icon: 'warehouse_storage_icon' }
+          },
+          {
+            path: 'wipCarInfo',
+            name: 'wipCarInfo',
+            component: () => import('@/views/wipStorageDemo/baseInfoWipStorage/wipCarInfo/index'),
+            meta: { title: 'Car信息', icon: 'warehouse_car_icon' }
+          },
+          {
+            path: 'wipLoactionStoreInfo',
+            name: 'wipLoactionStoreInfo',
+            component: () => import('@/views/wipStorageDemo/baseInfoWipStorage/wipLoactionStoreInfo/index'),
+            meta: { title: '库位信息', icon: 'warehouse_location_icon' }
+          },
+        ]
+      }, 
+      // {
+      //   path: 'ASMSetupCenter',
+      //   name: 'ASMSetupCenter',
+      //   component: () => import('@/views/MPSDemo/ASMSetupCenter/index'),
+      //   meta: { title: 'ASM上料信息查询', icon: 'bars_connectivity' }
+      // }, 
+    ]
+  },
+  {
     path: '/MPSDemo',
     component: Layout,
     alwaysShow: true,

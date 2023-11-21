@@ -1,49 +1,33 @@
 <template>
-    <div class="site-wrapper site-page--login">
-        <div class="site-content__wrapper">
-            <div class="site-content">
-                <div class="brand-info">
-                    <h2 class="brand-info__text">Veoneer Production IT System</h2>
-                    <p class="brand-info__intro">目前支持模块：</p>
-                    <p class="brand-info__intro">{{ "\u3000" }}EWI在线预览</p>
-                    <p class="brand-info__intro">{{ "\u3000" }}考勤登记</p>
-                    <p class="brand-info__intro">{{ "\u3000" }}CT报表</p>
-                    <p class="brand-info__intro">{{ "\u3000" }}MPS看板及物料查询</p>
-                </div>
-                <div class="login-main">
-                    <el-form ref="loginForm" :model="loginForm" class="login-form" auto-complete="on" label-position="left">
-                        <div class="title-container">
-                            <h1 class="title">Login System</h1>
-                        </div>
-                        <el-form-item prop="UserName">
-                            <span class="svg-container">
-                                <svg-icon icon-class="user" />
-                            </span>
-                            <el-input ref="UserName" v-model="loginForm.UserName" placeholder="UserName" name="UserName"
-                                type="text" tabindex="1" auto-complete="on" />
-                        </el-form-item>
-                        <el-form-item prop="Password">
-                            <span class="svg-container">
-                                <svg-icon icon-class="password" />
-                            </span>
-                            <el-input :key="passwordType" ref="Password" v-model="loginForm.Password" :type="passwordType"
-                                placeholder="Password" name="Password" tabindex="2" auto-complete="on"
-                                @keyup.enter.native="handleLogin" />
-                            <span class="show-pwd" @click="showPwd">
-                                <svg-icon :icon-class="passwordType === 'Password' ? 'eye' : 'eye-open'" />
-                            </span>
-                        </el-form-item>
-
-                        <el-button :loading="loading" type="primary" style="width: 100%; margin-bottom: 30px"
-                            @click.native.prevent="handleLogin">Login</el-button>
-                    </el-form>
-                    <div style="text-align: center; margin-top: 50px; margin-left: 70px; color: darkcyan;">版权所有 2023-2024 Veoneer Production IT MES Team</div>
-                </div>
-            </div>
-
+    <div class="rr-login back-img">
+      <div class="rr-login-wrap">
+        <div class="rr-login-left hidden-sm-and-down">
+            <p class="rr-login-left-title">Veoneer Production IT MES System</p>
         </div>
+  
+        <div class="rr-login-right">
+          <div class="rr-login-right-main">
+            <h4 class="rr-login-right-main-title">Login System</h4>
+            <el-form ref="loginForm" label-width="80px" :status-icon="true" :model="loginForm"  @keyup.enter="handleLogin">
+              <el-form-item label-width="0" prop="username">
+                <el-input v-model="loginForm.UserName" placeholder="用户名" prefix-icon="el-icon-user" autocomplete="on"></el-input>
+              </el-form-item>
+              <el-form-item label-width="0" prop="password">
+                <el-input placeholder="密码" v-model="loginForm.Password" prefix-icon="el-icon-lock" autocomplete="on" show-password></el-input>
+              </el-form-item>
+              <el-form-item label-width="0">
+                <el-button type="primary" size="small" :disabled="loading" @click="handleLogin" round class="rr-login-right-main-btn"> Login </el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </div>
+      <div class="login-footer">
+        <p>Production IT | 2023-2024©Tianxing.Song Dev</p>
+
+      </div>
     </div>
-</template>
+  </template>
 
 <script>
 import {
@@ -149,182 +133,176 @@ export default {
 };
 </script>
 
-<style lang="scss" >
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-    .login-main .el-input input {
-        color: $cursor;
-    }
+<style lang="less" scoped>
+@import url("@/assets/theme/base.less");
+.back-img{
+  background-image: url("~@/assets/login_bg.jpg");
+  background-size: cover;
+  background-position: center center;
 }
+.rr-login {
+  width: 100vw;
+  height: 100vh;
+ 
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-/* reset element-ui css */
-.login-main {
-    .el-input {
-        display: inline-block;
-        height: 47px;
-        width: 85%;
-
-        input {
-            background: transparent;
-            border: 0px;
-
-            border-radius: 0px;
-            padding: 12px 5px 12px 15px;
-            color: $light_gray;
-            height: 47px;
-            caret-color: $cursor;
-
-            &:-webkit-autofill {
-                box-shadow: 0 0 0px 1000px $bg inset !important;
-                -webkit-text-fill-color: $cursor !important;
-            }
-        }
+  @media only screen and (max-width: 992px) {
+    .rr-login-wrap {
+      width: 96% !important;
     }
-
-    .el-form-item {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        color: #454545;
+    .rr-login-right {
+      width: 100% !important;
     }
-}
-</style>
-<style lang="scss" scoped>
-.site-wrapper.site-page--login {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(38, 50, 56, .6);
+  }
+
+  &-wrap {
+    margin: -150px 0px 0px 0px;
+    width: 1000px;
+    box-shadow: -4px 5px 10px rgba(0, 0, 0, 0.4);
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    border-radius: 85px;
     overflow: hidden;
+  }
 
-    &:before {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        width: 76%;
-        height: 100%;
-        content: "";
-        background-image: url(~@/assets/login_bg.jpg);
-        background-size: cover;
+  &-left {
+    justify-content: center;
+    flex-direction: column;
+    
+    color: #fff;
+    float: left;
+    width: 50%;
+
+    &-title {
+      margin:  4.5em -5em 0em 0em;
+      width: 65%;
+      justify-content: center;
+      text-align: center;
+      color: rgb(0, 255, 255);
+      font-weight: 500;
+      letter-spacing: 2px;
+      font-size: 1.56em;
     }
+  }
 
-    .site-content__wrapper {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        padding: 0;
-        margin: 0;
-        overflow-x: hidden;
-        overflow-y: auto;
-        background-color: transparent;
-    }
+  &-right {
+    border-left: none;
+    color: #fff;
+    background:linear-gradient(to bottom right, #40567f, #111c30);
+    width: 50%;
+    float: left;
 
-    .site-content {
-        min-height: 100%;
-        padding: 20px 500px 30px 30px;
-    }
+    &-main {
+      margin: 0 auto;
+      width: 65%;
+      &-title {
+        color: rgb(0, 255, 255);;
+        margin-bottom: 40px;
+        font-weight: 500;
+        font-size: 24px;
+        text-align: center;
+        letter-spacing: 4px;
+      }
 
-    .brand-info {
-        margin: 77px 108px 0px 70px;
-        color: #fff;
-    }
+      &-lang .iconfont {
+        font-size: 20px;
+        color: #606266;
+        font-weight: 800;
+        width: 20px;
+        height: 20px;
+      }
 
-    .brand-info__text {
-        margin: 0 0 22px 0;
-        font-size: 68px;
-        font-weight: 420;
-        text-transform: uppercase;
-    }
+      .el-input__inner {
+        border-width: 0;
+        border-radius: 0;
+        border-bottom: 1px solid #e6dcdd;
+    
+      }
 
-    .brand-info__intro {
-        margin: 10px 0;
-        font-size: 32px;
-        line-height: 1.58;
-        opacity: .6;
-    }
-
-    .login-main {
-        position: fixed;
-        top: 0;
-        right: 0;
-        padding: 120px 0px 150px;
-        width: 470px;
-        min-height: 100%;
-        background-color: #26384d;
-    }
-
-}
-
-</style>
-<style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
-.login-main {
-    .login-form {
-        position: relative;
-        width: 520px;
-        max-width: 100%;
-        padding: 0px 50px 0px 124px;
-        margin: 0 auto;
-        overflow: hidden;
-        margin-top: -70px;
-    }
-
-    .tips {
-        font-size: 14px;
-        color: #fff;
-        margin-bottom: 10px;
-
-        span {
-            &:first-of-type {
-                margin-right: 16px;
-            }
+      &-code {
+        width: 100%;
+        .el-space__item:first-child {
+          flex: 1;
         }
-    }
-
-    .svg-container {
-        padding: 6px 5px 6px 15px;
-        color: $dark_gray;
-        vertical-align: middle;
-        width: 30px;
-        display: inline-block;
-    }
-
-    .title-container {
-        position: relative;
-
-        .title {
-            font-size: 26px;
-            color: $light_gray;
-            margin: 0px auto 40px auto;
-            text-align: center;
-            font-weight: bold;
-        }
-    }
-
-    .show-pwd {
-        position: absolute;
-        right: 10px;
-        top: 7px;
-        font-size: 16px;
-        color: $dark_gray;
+      }
+      &-btn {
+        width: 100%;
+        height: 45px;
+        font-size: 22px !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 800;
+        letter-spacing: 2px;
+        font-weight: 300 !important;
+        color: #000;
         cursor: pointer;
-        user-select: none;
-        
+        margin-top: 30px;
+        font-family: neo, sans-serif;
+        transition: 0.25s;
+        background-color: rgb(0, 255, 255);;
+      }
     }
+  }
 
+  .login-footer {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    p {
+      margin: 10px 0;
+    }
+    a {
+      padding: 0 5px;
+      color: rgba(255, 255, 255, 0.6);
+      &:focus,
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  &-left,
+  &-right {
+    position: relative;
+    min-height: 100px;
+    align-items: center;
+    display: flex;
+  }
+
+  @keyframes animate-down {
+    0%,
+    60%,
+    75%,
+    90%,
+    to {
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    0% {
+      opacity: 0;
+      transform: translate3d(0, -3000px, 0);
+    }
+    60% {
+      opacity: 1;
+      transform: translate3d(0, 25px, 0);
+    }
+    75% {
+      transform: translate3d(0, -10px, 0);
+    }
+    90% {
+      transform: translate3d(0, 5px, 0);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  .animate-down {
+    animation-name: animate-down;
+  }
 }
 </style>

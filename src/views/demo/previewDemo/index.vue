@@ -22,7 +22,7 @@
       </el-col>
       <el-divider direction="vertical"></el-divider>
       <el-col :span="20" :xs="24">
-        <pdf :src="src" class="pdf-class" style="padding: 5px 5px;position: relative;"></pdf>
+        <pdf :src="src" class="pdf-class" style="padding: 5px 5px;position: relative;" ></pdf>
       </el-col>
     </el-row>
 

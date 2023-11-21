@@ -9,7 +9,7 @@
             <div style="margin-top: 15px">
                 <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
                     <el-form-item label="输入搜索：">
-                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="帐号/姓名" clearable></el-input>
+                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="帐号/姓名" clearable @keypress.enter.native="handleSearchList()"></el-input>
                     </el-form-item>
                     <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
                         查询搜索
@@ -86,7 +86,7 @@
                 </el-form-item>
                 <el-form-item label="隶属部门">
                     <el-popover ref="departmentListPopover" placement="bottom-start" trigger="click">
-                        <el-tree :data="departmentDataList" :props="departmentListTreeProps" node-key="departmentId"
+                        <el-tree :data="departmentDataList" :props="departmentListTreeProps" node-key="ldepartmentId"
                             ref="departmentListTree" @current-change="departmentListTreeCurrentChangeHandle"
                             :default-expand-all="true" :highlight-current="true" :expand-on-click-node="true">
                         </el-tree>
@@ -107,7 +107,7 @@
             </span>
         </el-dialog>
         <el-dialog title="分配角色" :visible.sync="allocDialogVisible" width="30%">
-            <el-select v-model="allocRoleIds" value-key="id" placeholder="请选择" size="small" style="width: 80%">
+            <el-select v-model="allocRoleIds" multiple value-key="id" placeholder="请选择" size="small" style="width: 80%">
                 <el-option v-for="item in allRoleList" :key="item.id" :label="item.roleName" :value="item.id">
                 </el-option>
             </el-select>
@@ -153,8 +153,8 @@ export default {
             user: Object.assign({}, defaultUser),
             isEdit: false,
             allocDialogVisible: false,
-            allocRoleIds: '',
-            allRoleList: [{id:'',roleName:''}],
+            allocRoleIds: [],
+            allRoleList: [{ id: '', roleName: '' }],
             allocUserId: null,
             departmentListTreeProps: {
                 label: 'departmentName',
@@ -306,6 +306,7 @@ export default {
             this.getRoleListByUser(row.id);
         },
         getUserList() {
+            //debugger
             this.listLoading = true;
             getUserList(this.listQuery).then(response => {
                 this.listLoading = false;
@@ -324,9 +325,12 @@ export default {
         getRoleListByUser(UserId) {
             getRoleByUser(UserId).then(response => {
                 if (response.success) {
-                    this.allocRoleIds = '';
+                    debugger
+                    this.allocRoleIds = [];
                     if (response.data != null) {
-                        this.allocRoleIds=response.data.roleId;
+                        for (var i = 0; i < response.data.length; i++) {
+                            this.allocRoleIds.unshift(response.data[i].roleId);
+                        }
                     }
                 } else {
                     this.$message.error(response.msg)

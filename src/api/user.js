@@ -62,6 +62,7 @@ export function deleteUser(userid) {
 }
 
 export function allocRole(data) {
+  debugger
   return request({
     url: '/User/AllocRole',
     method: 'post',
@@ -74,5 +75,21 @@ export function getRoleByUser(userid) {
     url: '/User/GetRoleByUser',
     method: 'get',
     params:{userid}
+  })
+}
+
+export function checkOldPassword(data) {
+  return request({
+    url: '/User/checkOldPassword',
+    method: 'post',
+    data
+  })
+}
+
+export function updateUserPwd(data) {
+  return request({
+    url: '/User/updateUserPwd',
+    method: 'post',
+    data
   })
 }

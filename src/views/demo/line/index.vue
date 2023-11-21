@@ -9,12 +9,13 @@
             <div style="margin-top: 15px">
                 <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
                     <el-form-item label="输入搜索：">
-                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="线体名称" clearable @keypress.enter.native="handleSearchList()"></el-input>
+                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="线体名称" clearable
+                            @keypress.enter.native="handleSearchList()"></el-input>
                     </el-form-item>
-                    <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
+                    <el-button type="primary" @click="handleSearchList()" size="small">
                         查询搜索
                     </el-button>
-                    <el-button style="float:right;margin-right: 15px" @click="handleResetSearch()" size="small">
+                    <el-button  @click="handleResetSearch()" size="small">
                         重置
                     </el-button>
                 </el-form>
@@ -26,7 +27,10 @@
             <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
         </el-card>
         <div class="table-container">
-            <el-table ref="lineTable" :data="list" row-key="lineId" style="width: 100%;" size="small"
+            <el-table ref="lineTable" :data="list" row-key="lineId" style="width: 100%;" size="small"  
+                height="550"
+                :header-cell-style="{ background: '#304156', color: '#FFFFFF', 'font-size': 'initial' }"
+                :cell-style="{color: '#606266', 'font-size': 'initial'}"
                 v-loading="listLoading" border>
                 <el-table-column label="序号" align="center" type="index">
                 </el-table-column>
@@ -50,20 +54,20 @@
                 </el-table-column>
                 <el-table-column label="是否启用" align="center">
                     <template slot-scope="scope">
-                        <el-switch @change="handleStatusChange(scope.$index, scope.row)" :active-value="1"
+                        <el-switch @change="handleStatusChange(scope.$index, scope.row)" :active-value="1" active-color="#304156" inactive-color="red"
                             :inactive-value="0" v-model="scope.row.status">
                         </el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="primary" icon="el-icon-edit" class="edit"
+                        <el-link size="mini" type="primary" icon="el-icon-edit" class="edit"
                             @click="handleUpdate(scope.$index, scope.row)">
                             编辑
-                        </el-button>
-                        <el-button size="mini" type="danger" icon="el-icon-delete" style="padding-top: auto;"
+                        </el-link>
+                        <el-link size="mini" type="danger" icon="el-icon-delete" style="padding-top: auto;"
                             @click="handleDelete(scope.$index, scope.row)">删除
-                        </el-button>
+                        </el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -71,7 +75,7 @@
         <div class="pagination-container">
             <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
                 layout="total, sizes,prev, pager, next,jumper" :current-page.sync="listQuery.pageNum"
-                :page-size="listQuery.pageSize" :page-sizes="[10, 15, 20]" :total="total">
+                :page-size="listQuery.pageSize" :page-sizes="[10, 15, 20]" :total="total" >
             </el-pagination>
         </div>
         <el-dialog :title="isEdit ? '编辑线体' : '添加线体'" :visible.sync="dialogVisible" width="40%">
@@ -268,11 +272,26 @@ export default {
 <style lang="scss" scoped>
 .app-container {
     .operate-container {
-        .edit {
-            margin-right: 100px;
-        }
+        background-color:cadetblue 
+    }
+
+    .filter-container {
+        background-color: aquamarine;
     }
 }
+.edit{
+    color: #1b1f24;
+    margin-right: 25px;
+}
+/* 奇数行的背景色为 #f9f9f9 */
+::v-deep .el-table__row:nth-child(odd) {
+    background-color: #fcfcfc;
+  }
+  /* 偶数行的背景色为 #ffffff */
+::v-deep .el-table__row:nth-child(even) {
+  background-color: #f4f4f4;
+}
+
 </style>
   
   

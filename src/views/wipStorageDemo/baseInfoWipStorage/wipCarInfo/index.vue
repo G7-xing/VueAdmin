@@ -4,17 +4,17 @@
             <div>
                 <i class="el-icon-search"></i>
                 <span>筛选搜索</span>
-
             </div>
             <div style="margin-top: 15px">
                 <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
                     <el-form-item label="输入搜索：">
-                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="线体名称" clearable></el-input>
+                        <el-input v-model="listQuery.keyword" placeholder="小车编号" clearable
+                            @keydown.enter.native="handleSearchList()"></el-input>
                     </el-form-item>
-                    <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
+                    <el-button type="primary" @click="handleSearchList()" size="small">
                         查询搜索
                     </el-button>
-                    <el-button style="float:right;margin-right: 15px" @click="handleResetSearch()" size="small">
+                    <el-button @click="handleResetSearch()" size="small">
                         重置
                     </el-button>
                 </el-form>
@@ -23,18 +23,16 @@
         <el-card class="operate-container" shadow="never">
             <i class="el-icon-tickets"></i>
             <span>数据列表</span>
-            <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
+            <el-button size="mini" @click="handleAdd()" style="margin-left: 20px">添加小车</el-button>
         </el-card>
         <div class="table-container">
-            <el-table ref="lineTable" :data="list" row-key="lineId" style="width: 100%;" size="small"
-                v-loading="listLoading" border>
-                <el-table-column label="序号" align="center" type="index">
+            <el-table ref="carTable" :data="list" row-key="wipCarId" style="width: 100%;" size="small" height="565"
+                :header-cell-style="{ background: '#304156', color: '#FFFFFF', 'font-size': 'initial' }"
+                :cell-style="{ color: '#606266', 'font-size': 'initial' }" v-loading="listLoading" border>
+                <el-table-column label="序号" align="center" type="index" width="60">
                 </el-table-column>
-                <el-table-column label="线体名称" align="center">
-                    <template slot-scope="scope">{{ scope.row.lineName }}</template>
-                </el-table-column>
-                <el-table-column label="线体分类" align="center">
-                    <template slot-scope="scope">{{ scope.row.lineCategory }}</template>
+                <el-table-column label="小车编号" align="center">
+                    <template slot-scope="scope">{{ scope.row.carNo }}</template>
                 </el-table-column>
                 <el-table-column label="添加时间" align="center">
                     <template slot-scope="scope">{{ scope.row.createTime }}</template>
@@ -51,19 +49,19 @@
                 <el-table-column label="是否启用" align="center">
                     <template slot-scope="scope">
                         <el-switch @change="handleStatusChange(scope.$index, scope.row)" :active-value="1"
-                            :inactive-value="0" v-model="scope.row.status">
+                            active-color="#304156" inactive-color="red" :inactive-value="0" v-model="scope.row.status">
                         </el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="primary" icon="el-icon-edit" class="edit"
+                        <el-link size="mini" type="primary" icon="el-icon-edit" class="edit"
                             @click="handleUpdate(scope.$index, scope.row)">
                             编辑
-                        </el-button>
-                        <el-button size="mini" type="danger" icon="el-icon-delete" style="padding-top: auto;"
+                        </el-link>
+                        <el-link size="mini" type="danger" icon="el-icon-delete" style="padding-top: auto;"
                             @click="handleDelete(scope.$index, scope.row)">删除
-                        </el-button>
+                        </el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -74,20 +72,13 @@
                 :page-size="listQuery.pageSize" :page-sizes="[10, 15, 20]" :total="total">
             </el-pagination>
         </div>
-        <el-dialog :title="isEdit ? '编辑线体' : '添加线体'" :visible.sync="dialogVisible" width="40%">
-            <el-form :model="line" ref="lineForm" label-width="150px" size="small">
-                <el-form-item label="线体名称：">
-                    <el-input v-model="line.lineName" width="100%"></el-input>
-                </el-form-item>
-                <el-form-item label="线体分类：">
-                    <el-select v-model="line.lineCategory" placeholder="请选择线体分类">
-                        <el-option v-for="item in lineCategoryList" :key="item.value" :label="item.label"
-                            :value="item.label">
-                        </el-option>
-                    </el-select>
+        <el-dialog :title="isEdit ? '编辑小车' : '添加小车'" :visible.sync="dialogVisible" width="35%">
+            <el-form :model="car" ref="carForm" label-width="150px" size="small">
+                <el-form-item label="小车编号：">
+                    <el-input v-model="car.carNo" style="width: 200px;"></el-input>*类似于XX00
                 </el-form-item>
                 <el-form-item label="是否启用：">
-                    <el-radio-group v-model="line.status">
+                    <el-radio-group v-model="car.status">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="0">否</el-radio>
                     </el-radio-group>
@@ -101,17 +92,16 @@
     </div>
 </template>
 <script>
-import { fetchList, createLine, updateLine, updateStatus, deleteLine } from '@/api/line';
+import { fetchCarList, createCar, updateCar, updateCarStatus, deleteCar } from '@/api/WipStorage';
 import { mapGetters } from 'vuex'
 const defaultListQuery = {
     pageNum: 1,
     pageSize: 10,
     keyword: null
 };
-const defaultLine = {
-    lineId: null,
-    lineName: null,
-    lineCategory: null,
+const defaultcar = {
+    wipCarId: null,
+    wipCarNo: null,
     status: 1,
     createBy: '',
     updateBy: ''
@@ -125,18 +115,13 @@ export default {
             total: null,
             listLoading: false,
             dialogVisible: false,
-            line: Object.assign({}, defaultLine),
+            car: Object.assign({}, defaultcar),
             isEdit: false,
             allocDialogVisible: false,
-            lineCategoryList: [
-                { label: 'SMT', value: '00' },
-                { label: 'ASSY', value: '11' },
-                { label: 'Offline', value: '22' },
-            ],
         }
     },
     created() {
-        this.fetchList();
+        //this.fetchList();
     },
     computed: {
         ...mapGetters(['userid'])
@@ -161,7 +146,7 @@ export default {
         handleAdd() {
             this.dialogVisible = true;
             this.isEdit = false;
-            this.line = Object.assign({}, defaultLine);
+            this.car = Object.assign({}, defaultcar);
         },
         handleStatusChange(index, row) {
             this.$confirm('是否要修改该状态?', '提示', {
@@ -169,11 +154,19 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                updateStatus(row.id, { status: row.status }).then(response => {
-                    this.$message({
-                        type: 'success',
-                        message: '修改成功!'
-                    });
+                updateCarStatus(row.wipCarId, row.status).then(res => {
+                    if (res.success) {
+                        this.$message({
+                            message: '修改状态成功！',
+                            type: 'success'
+                        });
+                        this.fetchList();
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'error'
+                        });
+                    }
                 });
             }).catch(() => {
                 this.$message({
@@ -189,19 +182,26 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                deleteAdmin(row.id).then(response => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                    this.fetchList();
+                deleteCar(row.wipCarId).then(res => {
+                    if (res.success) {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        this.fetchList();
+                    } else {
+                        this.$message({
+                            message: res.msg,
+                            type: 'error'
+                        });
+                    }
                 });
             });
         },
         handleUpdate(index, row) {
             this.dialogVisible = true;
             this.isEdit = true;
-            this.line = Object.assign({}, row);
+            this.car = Object.assign({}, row);
         },
         handleDialogConfirm() {
             this.$confirm('是否要确认?', '提示', {
@@ -210,21 +210,27 @@ export default {
                 type: 'warning'
             }).then(() => {
                 if (this.isEdit) {
-                    // this.line.createBy = this.userid;
-                    this.line.updateBy = this.userid;
-                    updateLine(this.line).then(response => {
-                        this.$message({
-                            message: '修改成功！',
-                            type: 'success'
-                        });
-                        this.dialogVisible = false;
-                        this.fetchList();
+                    this.car.updateBy = this.userid;
+                    updateCar(this.car).then(res => {
+                        if (res.success) {
+                            this.$message({
+                                message: '修改成功！',
+                                type: 'success'
+                            });
+                            this.dialogVisible = false;
+                            this.fetchList();
+                        } else {
+                            this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
                     })
                 } else {
-                    this.line.createBy = this.userid;
-                    this.line.updateBy = this.userid;
-                    //console.log(this.line);
-                    createLine(this.line).then(res => {
+                    this.car.createBy = this.userid;
+                    this.car.updateBy = this.userid;
+                    //console.log(this.car);
+                    createCar(this.car).then(res => {
                         if (res.success) {
                             this.$message({
                                 message: '添加成功！',
@@ -240,14 +246,13 @@ export default {
                             //this.dialogVisible = false;
                             this.fetchList();
                         }
-
                     })
                 }
             })
         },
         fetchList() {
             this.listLoading = true;
-            fetchList(this.listQuery).then(response => {
+            fetchCarList(this.listQuery).then(response => {
                 if (response.success) {
                     this.listLoading = false;
                     this.list = response.data;
@@ -268,10 +273,27 @@ export default {
 <style lang="scss" scoped>
 .app-container {
     .operate-container {
-        .edit {
-            margin-right: 100px;
-        }
+        background-color: cadetblue
     }
+
+    .filter-container {
+        background-color: aquamarine;
+    }
+}
+
+.edit {
+    color: #1b1f24;
+    margin-right: 25px;
+}
+
+/* 奇数行的背景色为 #f9f9f9 */
+::v-deep .el-table__row:nth-child(odd) {
+    background-color: #fcfcfc;
+}
+
+/* 偶数行的背景色为 #ffffff */
+::v-deep .el-table__row:nth-child(even) {
+    background-color: #f4f4f4;
 }
 </style>
   

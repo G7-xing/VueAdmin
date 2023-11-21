@@ -8,12 +8,13 @@
             <div style="margin-top: 15px">
                 <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
                     <el-form-item label="输入搜索：">
-                        <el-input v-model="listQuery.keyword" class="input-width" placeholder="文件名称" clearable></el-input>
+                        <el-input v-model="listQuery.keyword" placeholder="文件名称" clearable
+                            @keydown.enter.native="handleSearchList()"></el-input>
                     </el-form-item>
-                    <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
+                    <el-button type="primary" @click="handleSearchList()" size="small">
                         查询搜索
                     </el-button>
-                    <el-button style="float:right;margin-right: 15px" @click="handleResetSearch()" size="small">
+                    <el-button  @click="handleResetSearch()" size="small">
                         重置
                     </el-button>
                 </el-form>
@@ -22,16 +23,18 @@
         <el-card class="operate-container" shadow="never">
             <i class="el-icon-tickets"></i>
             <span>数据列表</span>
-            <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
+            <el-button size="mini" type="primary" @click="handleAdd()" style="margin-left: 20px">添加EWI文件信息</el-button>
         </el-card>
         <div class="table-container">
-            <el-table ref="fileTable" :data="list" row-key="fileId" style="width: 100%;" size="mini" v-loading="listLoading" border>
-                <el-table-column label="序号" align="center" type="index" >
+            <el-table ref="fileTable" :data="list" row-key="fileId" style="width: 100%;" size="mini" height="550"
+                :header-cell-style="{ background: '#304156', color: '#FFFFFF', 'font-size': 'initial' }"
+                :cell-style="{ color: '#606266', 'font-size': 'initial' }" v-loading="listLoading" border>
+                <el-table-column label="序号" align="center" type="index">
                 </el-table-column>
-                <el-table-column label="文件名称" align="center" >
+                <el-table-column label="文件名称" align="center">
                     <template slot-scope="scope">{{ scope.row.fileName }}</template>
                 </el-table-column>
-                <el-table-column label="文件URL" align="center" >
+                <el-table-column label="文件URL" align="center" width="350px">
                     <template slot-scope="scope">{{ scope.row.fileURL }}</template>
                 </el-table-column>
                 <el-table-column label="添加时间" align="center">
@@ -53,18 +56,18 @@
                         </el-switch>
                     </template>
                 </el-table-column> -->
-                <el-table-column label="备注" align="center" >
+                <el-table-column label="备注" align="center">
                     <template slot-scope="scope">{{ scope.row.remark }}</template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="primary" icon="el-icon-edit" class="edit"
+                        <el-link size="mini" type="primary" icon="el-icon-edit" class="edit"
                             @click="handleUpdate(scope.$index, scope.row)">
                             编辑
-                        </el-button>
-                        <el-button size="mini" type="danger" icon="el-icon-delete" style="padding-top: auto;"
+                        </el-link>
+                        <el-link size="mini" type="danger" icon="el-icon-delete" style="padding-top: auto;"
                             @click="handleDelete(scope.$index, scope.row)">删除
-                        </el-button>
+                        </el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -78,10 +81,10 @@
         <el-dialog :title="isEdit ? '编辑EWI文件' : '添加EWI文件'" :visible.sync="dialogVisible" width="40%">
             <el-form :model="file" ref="fileForm" label-width="150px" size="small">
                 <el-form-item label="EWI文件名称: ">
-                    <el-input v-model="file.fileName" ></el-input>
+                    <el-input v-model="file.fileName"></el-input>
                 </el-form-item>
                 <el-form-item label="EWI文件URL: ">
-                    <el-input v-model="file.fileURL" ></el-input>
+                    <el-input v-model="file.fileURL"></el-input>
                 </el-form-item>
                 <el-form-item label="选择线体：">
                     <el-select v-model="file.lineId" clearable filterable placeholder="请选择">
@@ -260,7 +263,7 @@ export default {
                     this.listLoading = false;
                     this.list = response.data;
                     this.total = response.dynamicData.total;
-                    
+
                     //console.log(this.list);
                 } else {
                     this.$message({
@@ -293,10 +296,27 @@ export default {
 <style lang="scss" scoped>
 .app-container {
     .operate-container {
-        .edit {
-            margin-right: 100px;
-        }
+        background-color: cadetblue
     }
+
+    .filter-container {
+        background-color: aquamarine;
+    }
+}
+
+.edit {
+    color: #1b1f24;
+    margin-right: 25px;
+}
+
+/* 奇数行的背景色为 #f9f9f9 */
+::v-deep .el-table__row:nth-child(odd) {
+    background-color: #fcfcfc;
+}
+
+/* 偶数行的背景色为 #ffffff */
+::v-deep .el-table__row:nth-child(even) {
+    background-color: #f4f4f4;
 }
 </style>
   

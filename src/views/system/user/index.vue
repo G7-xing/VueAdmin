@@ -11,10 +11,10 @@
                     <el-form-item label="输入搜索：">
                         <el-input v-model="listQuery.keyword" class="input-width" placeholder="帐号/姓名" clearable @keypress.enter.native="handleSearchList()"></el-input>
                     </el-form-item>
-                    <el-button style="float:right" type="primary" @click="handleSearchList()" size="small">
+                    <el-button type="primary" @click="handleSearchList()" size="small">
                         查询搜索
                     </el-button>
-                    <el-button style="float:right;margin-right: 15px" @click="handleResetSearch()" size="small">
+                    <el-button  @click="handleResetSearch()" size="small">
                         重置
                     </el-button>
                 </el-form>
@@ -23,43 +23,47 @@
         <el-card class="operate-container" shadow="never">
             <i class="el-icon-tickets"></i>
             <span>数据列表</span>
-            <el-button size="mini" class="btn-add" @click="handleAdd()" style="margin-left: 20px">添加</el-button>
+            <el-button size="mini" type="primary" @click="handleAdd()" style="margin-left: 20px">添加用户</el-button>
         </el-card>
         <div class="table-container">
-            <el-table ref="userTable" :data="list" row-key="id" style="width: 100%;" v-loading="listLoading" border>
-                <el-table-column label="序号" type="index" width="50">
+            <el-table ref="userTable" :data="list" row-key="id" style="width: 100%;" 
+            height="565"
+                :header-cell-style="{ background: '#304156', color: '#FFFFFF', 'font-size': 'initial', 'text-align': 'center'}"
+                :cell-style="{color: '#606266', 'font-size': 'initial'}"
+            v-loading="listLoading" border>
+                <el-table-column label="序号" type="index" width="50" align="center">
                 </el-table-column>
-                <el-table-column label="用户名" align="center">
+                <el-table-column label="用户名" align="center" >
                     <template slot-scope="scope">{{ scope.row.userName }}</template>
                 </el-table-column>
-                <el-table-column label="昵称" align="center">
+                <el-table-column label="工号" align="center" width="200">
                     <template slot-scope="scope">{{ scope.row.nickName }}</template>
                 </el-table-column>
-                <el-table-column label="邮箱" align="center">
+                <el-table-column label="邮箱" width="250">
                     <template slot-scope="scope">{{ scope.row.email }}</template>
                 </el-table-column>
-                <el-table-column label="部门" align="center">
+                <el-table-column label="部门" align="center" width="200">
                     <template slot-scope="scope">{{ scope.row.departmentName }}</template>
                 </el-table-column>
-                <el-table-column label="添加时间" width="160" align="center">
+                <el-table-column label="添加时间" align="center">
                     <template slot-scope="scope">{{ scope.row.createTime }}</template>
                 </el-table-column>
-                <!-- <el-table-column label="最后登录" width="160" align="center">
+                <!-- <el-table-column label="最后登录" width="160">
                     <template slot-scope="scope">{{ scope.row.loginTime | formatDateTime }}</template>
                 </el-table-column> -->
-                <el-table-column label="是否启用" width="140" align="center">
+                <el-table-column label="是否启用" align="center">
                     <template slot-scope="scope">
-                        <el-switch @change="handleStatusChange(scope.$index, scope.row)" :active-value="1"
+                        <el-switch @change="handleStatusChange(scope.$index, scope.row)" :active-value="1" active-color="#304156" inactive-color="red"
                             :inactive-value="0" v-model="scope.row.status">
                         </el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="350" align="center">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="text"
-                            @click="handleSelectRole(scope.$index, scope.row)">分配角色</el-button>
-                        <el-button size="mini" type="text" @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
-                        <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-link size="mini" type="primary" icon="el-icon-set-up" class="edit"
+                            @click="handleSelectRole(scope.$index, scope.row)">分配角色</el-link>
+                        <el-link size="mini" type="primary" icon="el-icon-edit" @click="handleUpdate(scope.$index, scope.row)" class="edit">编辑</el-link>
+                        <el-link size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.$index, scope.row)">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -75,14 +79,14 @@
                 <el-form-item label="用户名：">
                     <el-input v-model="user.userName" style="width: 250px"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名：">
+                <el-form-item label="工号：">
                     <el-input v-model="user.nickName" style="width: 250px"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱：">
                     <el-input v-model="user.email" style="width: 250px"></el-input>
                 </el-form-item>
                 <el-form-item label="密码：">
-                    <el-input v-model="user.password" type="password" style="width: 250px"></el-input>
+                    <el-input v-model="user.password" type="text" style="width: 250px"></el-input>
                 </el-form-item>
                 <el-form-item label="隶属部门">
                     <el-popover ref="departmentListPopover" placement="bottom-start" trigger="click">
@@ -133,7 +137,7 @@ const defaultListQuery = {
 const defaultUser = {
     id: null,
     userName: null,
-    password: null,
+    password: '123456',
     nickName: null,
     email: null,
     departmentName: null,
@@ -340,7 +344,32 @@ export default {
     }
 }
 </script>
-<style></style>
-  
+<style lang="scss" scoped>
+.app-container {
+    .operate-container {
+        background-color:cadetblue 
+    }
+
+    .filter-container {
+        background-color: aquamarine;
+    }
+    .span{
+        color: #e71818;
+    }
+}
+.edit{
+    color: #1b1f24;
+    margin-right: 25px;
+}
+/* 奇数行的背景色为 #f9f9f9 */
+::v-deep .el-table__row:nth-child(odd) {
+    background-color: #fcfcfc;
+  }
+  /* 偶数行的背景色为 #ffffff */
+::v-deep .el-table__row:nth-child(even) {
+  background-color: #f4f4f4;
+}
+
+</style>
   
   

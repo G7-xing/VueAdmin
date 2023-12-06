@@ -24,6 +24,7 @@
             <i class="el-icon-tickets"></i>
             <span>数据列表</span>
             <el-button size="mini" @click="handleAdd()" style="margin-left: 20px">添加小车</el-button>
+            <el-button v-show="this.userid ==='9c33dbc2-df90-45b0-9f09-2137163a76d0'" size="mini" @click="handleBatchAdd()" style="margin-left: 20px">批量添加小车</el-button>
         </el-card>
         <div class="table-container">
             <el-table ref="carTable" :data="list" row-key="wipCarId" style="width: 100%;" size="small" height="565"
@@ -32,7 +33,7 @@
                 <el-table-column label="序号" align="center" type="index" width="60">
                 </el-table-column>
                 <el-table-column label="小车编号" align="center">
-                    <template slot-scope="scope">{{ scope.row.carNo }}</template>
+                    <template slot-scope="scope">{{ scope.row.wipCarNo }}</template>
                 </el-table-column>
                 <el-table-column label="添加时间" align="center">
                     <template slot-scope="scope">{{ scope.row.createTime }}</template>
@@ -73,12 +74,12 @@
             </el-pagination>
         </div>
         <el-dialog :title="isEdit ? '编辑小车' : '添加小车'" :visible.sync="dialogVisible" width="35%">
-            <el-form :model="car" ref="carForm" label-width="150px" size="small">
+            <el-form :model="wipCar" ref="carForm" label-width="150px" size="small">
                 <el-form-item label="小车编号：">
-                    <el-input v-model="car.carNo" style="width: 200px;"></el-input>*类似于XX00
+                    <el-input v-model="wipCar.wipCarNo" style="width: 200px;"></el-input>
                 </el-form-item>
                 <el-form-item label="是否启用：">
-                    <el-radio-group v-model="car.status">
+                    <el-radio-group v-model="wipCar.status">
                         <el-radio :label="1">是</el-radio>
                         <el-radio :label="0">否</el-radio>
                     </el-radio-group>
@@ -89,10 +90,32 @@
                 <el-button type="primary" @click="handleDialogConfirm()" size="small">确 定</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog title="批量添加小车" :visible.sync="dialogVisibleBatch" width="35%">
+            <el-form :model="wipCarBatchFrom" ref="wipCarBatchFrom" label-width="150px" size="small">
+                <el-form-item label="小车字母编号：" prop="carCharNo">
+                    <el-input v-model="wipCarBatchFrom.carCharNo" style="width: 100px;"></el-input>*一位字母大写
+                </el-form-item>
+                <el-form-item label="库位数量：" prop="charNum">
+                    <el-input-number v-model="wipCarBatchFrom.charNum" :min="2"
+                        :max="999"></el-input-number>*与字母组合的流水个数:2-999
+                </el-form-item>
+                <el-form-item label="是否启用：" prop="status">
+                    <el-radio-group v-model="wipCarBatchFrom.status">
+                        <el-radio :label="1">是</el-radio>
+                        <el-radio :label="0">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+                <el-button type="primary" @click="handleDialogConfirmBatch()" size="small">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
-import { fetchCarList, createCar, updateCar, updateCarStatus, deleteCar } from '@/api/WipStorage';
+import { fetchCarList, createCar, updateCar, updateCarStatus, deleteCar,createBatchCar } from '@/api/WipStorage';
 import { mapGetters } from 'vuex'
 const defaultListQuery = {
     pageNum: 1,
@@ -106,6 +129,13 @@ const defaultcar = {
     createBy: '',
     updateBy: ''
 };
+const defaultWipCarBatchFrom = {
+    carCharNo: null,
+    charNum: 2,
+    status: 1,
+    createBy: '',
+    updateBy: ''
+};
 export default {
     name: 'wipCarInfo',
     data() {
@@ -115,13 +145,14 @@ export default {
             total: null,
             listLoading: false,
             dialogVisible: false,
-            car: Object.assign({}, defaultcar),
+            wipCar: Object.assign({}, defaultcar),
             isEdit: false,
-            allocDialogVisible: false,
+            dialogVisibleBatch: false,
+            wipCarBatchFrom: Object.assign({}, defaultWipCarBatchFrom),
         }
     },
     created() {
-        //this.fetchList();
+        this.fetchList();
     },
     computed: {
         ...mapGetters(['userid'])
@@ -146,7 +177,28 @@ export default {
         handleAdd() {
             this.dialogVisible = true;
             this.isEdit = false;
-            this.car = Object.assign({}, defaultcar);
+            this.wipCar = Object.assign({}, defaultcar);
+        },
+        handleBatchAdd() {
+            this.dialogVisibleBatch = true;
+            this.wipCarBatchFrom = Object.assign({}, defaultWipCarBatchFrom);
+        },
+        handleDialogConfirmBatch() {
+            let carBatch = [];
+            let carCharNo = this.wipCarBatchFrom.carCharNo;
+            for (let i = 1; i <= this.wipCarBatchFrom.charNum; i++) {
+                let numNo = i < 10 ? '00' + i : (i >= 10 && i <= 99) ? '0' + i : i;
+                carBatch.unshift({
+                    wipCarNo: carCharNo + numNo,
+                    updateBy: this.userid,
+                    createBy: this.userid
+                });
+            }
+            createBatchCar(carBatch).then(res => {
+                res.success ? this.$message({ message: '批量添加成功！', type: 'success' }) : this.$message({ message: res.msg, type: 'error' });
+                this.dialogVisibleBatch = false;
+                this.fetchList();
+            });
         },
         handleStatusChange(index, row) {
             this.$confirm('是否要修改该状态?', '提示', {
@@ -154,54 +206,27 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                updateCarStatus(row.wipCarId, row.status).then(res => {
-                    if (res.success) {
-                        this.$message({
-                            message: '修改状态成功！',
-                            type: 'success'
-                        });
-                        this.fetchList();
-                    } else {
-                        this.$message({
-                            message: res.msg,
-                            type: 'error'
-                        });
-                    }
+                updateCarStatus({ wipCarId: row.wipCarId, status: row.status, updateBy: this.userid }).then(res => {
+                    res.success ? this.$message({ message: '修改状态成功！', type: 'success' }) : this.$message({ message: res.msg, type: 'error' });
+                    this.fetchList();
                 });
             }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '取消修改'
-                });
+                this.$message({ type: 'info', message: '取消修改' });
                 this.fetchList();
             });
         },
         handleDelete(index, row) {
-            this.$confirm('是否要删除该用户?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
+            this.$confirm('是否要删除该用户?', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }).then(() => {
                 deleteCar(row.wipCarId).then(res => {
-                    if (res.success) {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                        this.fetchList();
-                    } else {
-                        this.$message({
-                            message: res.msg,
-                            type: 'error'
-                        });
-                    }
+                    res.success ? this.$message({ message: '删除成功!', type: 'success' }) : this.$message({ message: res.msg, type: 'error' });
+                    this.fetchList();
                 });
             });
         },
         handleUpdate(index, row) {
             this.dialogVisible = true;
             this.isEdit = true;
-            this.car = Object.assign({}, row);
+            this.wipCar = Object.assign({}, row);
         },
         handleDialogConfirm() {
             this.$confirm('是否要确认?', '提示', {
@@ -210,42 +235,20 @@ export default {
                 type: 'warning'
             }).then(() => {
                 if (this.isEdit) {
-                    this.car.updateBy = this.userid;
-                    updateCar(this.car).then(res => {
-                        if (res.success) {
-                            this.$message({
-                                message: '修改成功！',
-                                type: 'success'
-                            });
-                            this.dialogVisible = false;
-                            this.fetchList();
-                        } else {
-                            this.$message({
-                                message: res.msg,
-                                type: 'error'
-                            });
-                        }
+                    this.wipCar.updateBy = this.userid;
+                    updateCar(this.wipCar).then(res => {
+                        res.success ? this.$message({ message: '修改成功！', type: 'success' }) : this.$message({ message: res.msg, type: 'error' });
+                        this.dialogVisible = false;
+                        this.fetchList();
                     })
                 } else {
-                    this.car.createBy = this.userid;
-                    this.car.updateBy = this.userid;
-                    //console.log(this.car);
-                    createCar(this.car).then(res => {
-                        if (res.success) {
-                            this.$message({
-                                message: '添加成功！',
-                                type: 'success'
-                            });
-                            this.dialogVisible = false;
-                            this.fetchList();
-                        } else {
-                            this.$message({
-                                message: res.msg,
-                                type: 'error'
-                            });
-                            //this.dialogVisible = false;
-                            this.fetchList();
-                        }
+                    this.wipCar.createBy = this.userid;
+                    this.wipCar.updateBy = this.userid;
+                    delete this.wipCar.wipCarId;
+                    createCar(this.wipCar).then(res => {
+                        res.success ? this.$message({ message: '添加成功！', type: 'success' }) : this.$message({ message: res.msg, type: 'error' });
+                        this.dialogVisible = false;
+                        this.fetchList();
                     })
                 }
             })
@@ -257,14 +260,12 @@ export default {
                     this.listLoading = false;
                     this.list = response.data;
                     this.total = response.dynamicData.total;
-                    //console.log(this.list);
                 } else {
                     this.$message({
                         message: res.msg,
                         type: 'error'
                     });
                 }
-
             });
         },
     }
@@ -288,7 +289,7 @@ export default {
 
 /* 奇数行的背景色为 #f9f9f9 */
 ::v-deep .el-table__row:nth-child(odd) {
-    background-color: #fcfcfc;
+    background-color: #d2d2d2;
 }
 
 /* 偶数行的背景色为 #ffffff */

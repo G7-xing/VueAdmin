@@ -125,7 +125,7 @@ export function param2Obj(url) {
 export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
   var res = []
   var temp = {}
- // debugger;
+  // debugger;
   for (var i = 0; i < data.length; i++) {
     temp[data[i][id]] = data[i]
   }
@@ -232,6 +232,34 @@ export function convertTree(tree, map) {
   });
   return result;
 }
-
+/**
+ * 码的转换
+ * @param {*} barcode 
+ * @returns 
+ */
+export function barCodeTrans(barcode) {
+  let result = {};
+  let vendor = ""; let labelid = ""; let Quantity = "0"; let rawPartNumber = ''; let transUniqueId = '';
+  if (barcode.startsWith("[)>")) {
+    let dataSet = barcode.split(" "); // 按照空格分隔
+    dataSet.forEach(str => {
+      if (str.startsWith("V"))
+        vendor = str.substring(1);
+      if (str.startsWith("P"))
+        rawPartNumber = str.substring(1);
+      if (str.startsWith("S"))
+        labelid = str.substring(1);
+      if (str.startsWith("Q"))
+        Quantity = str.substring(1);
+    });
+    transUniqueId = vendor + rawPartNumber + labelid;
+  }
+  else if (barcode.startsWith("9S0000")) {
+    rawPartNumber = barcode.substring(8, 18);
+    transUniqueId = barcode;
+  }
+  result = { transUniqueId,rawPartNumber }
+  return result;
+}
 
 

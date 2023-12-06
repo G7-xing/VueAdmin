@@ -311,7 +311,7 @@ export default {
 
 /* 奇数行的背景色为 #f9f9f9 */
 ::v-deep .el-table__row:nth-child(odd) {
-    background-color: #fcfcfc;
+    background-color: #d2d2d2;
 }
 
 /* 偶数行的背景色为 #ffffff */

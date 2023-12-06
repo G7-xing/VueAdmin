@@ -205,6 +205,12 @@ export const asyncRouterMap = [
         component: () => import('@/views/MPSDemo/ASMSetupCenter/index'),
         meta: { title: 'ASM上料信息查询', icon: 'bars_connectivity' }
       }, 
+      {
+        path: 'SMTMPSPDA',
+        name: 'SMTMPSPDA',
+        component: () => import('@/views/MPSDemo/SMTMPSPDA/index'),
+        meta: { title: 'SMTMPSPDA', icon: 'pda_icon' }
+      },
     ]
   },
   {

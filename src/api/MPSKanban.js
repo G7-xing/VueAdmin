@@ -50,5 +50,29 @@ export function fetchASMSetupList(data) {
 //#endregion
 
 
+//#region    SMTMPSPDA api
+export function fetchMPSofLineList(data) {
+  return request({
+    url: '/MPSKanban/fetchMPSofLineList',
+    method: 'post',
+    data
+  })
+}
+export function fetchMPSDetailById(pickOrderId) {
+  return request({
+    url: '/MPSKanban/fetchMPSDetailById',
+    method: 'get',
+    params: {pickOrderId}
+  })
+}
+export function handleQADAndMPS(data) {
+  return request({
+    url: '/MPSKanban/handleQADAndMPS',
+    method: 'post',
+    data
+  })
+}
+//#endregion
+
 
 

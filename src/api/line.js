@@ -48,4 +48,11 @@ export function fetchAllList() {
   })
 }
 
+export function getLineListByCategory(category) {
+  return request({
+    url: '/Line/getLineListByCategory',
+    method: 'get',
+    params:{category}
+  })
+}
 

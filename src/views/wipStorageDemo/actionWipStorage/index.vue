@@ -66,6 +66,10 @@
         </div>
         
         <!-- 查询界面 -->
+        <div v-show="active===2">
+            <DemoBlock>在库查询</DemoBlock>
+            <queryByPartNumber :active="active" :userid="userid"></queryByPartNumber>
+        </div>
         <!-- 底部导航 -->
         <van-tabbar v-model="active">
             <van-tabbar-item icon="checked">绑定</van-tabbar-item>
@@ -83,9 +87,10 @@ import { Notify, Dialog } from 'vant';
 import { checkCarIsFullByCarNo, checkMagazineIsValidByNo, saveCarWithMagazineInfo, checkLoctionIsValidByNo, checkFullMagazineCarIsValidByNo, saveLocationWithCarInfo } from "@/api/WipStorage";
 import { mapGetters } from 'vuex';
 import UnbindActionPDA from './unbindActionPDA.vue';
+import queryByPartNumber from './queryByPartNumber.vue';
 export default {
     name: 'actionWipStorage',
-    components: { DemoBlock,UnbindActionPDA },
+    components: { DemoBlock,UnbindActionPDA ,queryByPartNumber},
     computed: {
      ...mapGetters(['userid'])
     },

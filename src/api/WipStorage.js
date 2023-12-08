@@ -187,4 +187,11 @@ export function unbindLocationWithCarInfo(data) {
     data
   })
 }
+export function getInStorageDataByPcbaNo(pcbaNo) {
+  return request({
+    url: '/WipStorage/getInStorageDataByPcbaNo',
+    method: 'get',
+    params: { pcbaNo }
+  })
+}
 //#endregion

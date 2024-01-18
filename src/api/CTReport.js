@@ -25,11 +25,11 @@ export function updateStatus(data) {
   })
 }
 
-export function deleteCTReport(data) {
+export function deleteCTReport(CTReportId) {
   return request({
-    url: '/CTReport/List',
-    method: 'post',
-    data
+    url: '/CTReport/deleteCTReport',
+    method: 'get',
+    params:{CTReportId}
   })
 }
 

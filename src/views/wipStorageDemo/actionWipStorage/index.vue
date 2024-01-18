@@ -64,7 +64,6 @@
             <DemoBlock>小车与库位解绑</DemoBlock>
             <UnbindActionPDA :active="active" :userid="userid"></UnbindActionPDA>
         </div>
-        
         <!-- 查询界面 -->
         <div v-show="active===2">
             <DemoBlock>在库查询</DemoBlock>
@@ -82,12 +81,12 @@
 
 <script>
 import DemoBlock from '@/components/DemoBlock';
-
 import { Notify, Dialog } from 'vant';
 import { checkCarIsFullByCarNo, checkMagazineIsValidByNo, saveCarWithMagazineInfo, checkLoctionIsValidByNo, checkFullMagazineCarIsValidByNo, saveLocationWithCarInfo } from "@/api/WipStorage";
 import { mapGetters } from 'vuex';
 import UnbindActionPDA from './unbindActionPDA.vue';
 import queryByPartNumber from './queryByPartNumber.vue';
+
 export default {
     name: 'actionWipStorage',
     components: { DemoBlock,UnbindActionPDA ,queryByPartNumber},

@@ -151,13 +151,15 @@ export default {
         },
         handleBarcode() {
             debugger
-            let resultCode = barCodeTrans(this.barcode);
+            let resultCode={};
+            resultCode = barCodeTrans(this.barcode);
             if (resultCode.transUniqueId) {
                 let transUniqueId = resultCode.transUniqueId;
                 let rawPartNumber = resultCode.rawPartNumber;
-                if (this.detailData.filter(x => x.partNumber === rawPartNumber)) {
-                    if (this.detailData.filter(x => x.uniqueId === transUniqueId)) {
-                        Toast("Exists-" + UniqueId);
+                if (this.detailData.filter(x => x.partNumber === rawPartNumber).length!=0) {
+                    console.log(this.detailData.filter(x => x.uniqueId === transUniqueId));
+                    if (this.detailData.filter(x => x.uniqueId === transUniqueId).length!=0) {
+                        Toast("Exists-" + transUniqueId);
                         this.speak("已扫入该信息");
                     } else {
                         // QAD 移库--> 移库成功则更新

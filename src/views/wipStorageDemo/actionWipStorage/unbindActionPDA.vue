@@ -1,9 +1,9 @@
 <template >
     <div>
         <el-card :body-style="{ padding: '5px' }" shadow="always">
-            <van-field  v-model="unbindLocation0" ref="unbindLocation0" center clearable label-align="right"
-                label="库位(Location):" :disabled="checkunbindLocationFlag" placeholder="请扫入库位二维码信息" 
-                @keydown.enter.native="checkUnbindLocation0()" label-width="7.5rem">
+            <van-field v-model="unbindLocation0" ref="unbindLocation0" center clearable label-align="right" label="库位/小车:"
+                :disabled="checkunbindLocationFlag" placeholder="请扫入库位/小车二维码信息"
+                @keydown.enter.native="checkUnbindLocation0()" label-width="4rem">
             </van-field>
         </el-card>
         <div class="button-group" v-show="checkunbindLocationFlag">
@@ -14,7 +14,7 @@
 </template>   
 <script>
 import { Notify, Dialog } from 'vant';
-import { checkUnbindLocationIsValidByNo, unbindLocationWithCarInfo } from "@/api/WipStorage";
+import { checkUnbindLocationIsValidByNo, unbindLocationWithCarInfo, getUnbindCarNoOfLocation } from "@/api/WipStorage";
 export default {
     name: 'unbindActionPDA',
     props: ['active', 'userid'],
@@ -38,15 +38,31 @@ export default {
     },
     methods: {
         checkUnbindLocation0() {
-            checkUnbindLocationIsValidByNo(this.unbindLocation0.toUpperCase()).then(res => {
-                if (res.success) {
-                    this.checkunbindLocationFlag = true;
-                    Notify({ type: 'success', message: res.msg });
-                } else {
-                    Notify({ type: 'danger', message: this.unbindLocation0 + "---" + res.msg });
-                    this.unbindLocation0 = '';
-                }
-            })
+            // 检验扫入的是车
+            if (this.unbindLocation0.startsWith('T')) {
+                getUnbindCarNoOfLocation(this.unbindLocation0.toUpperCase()).then(res => {
+                    if (res.success) {
+                      this.handleCheck(res.data.locationNo)
+                    } else {
+                        Notify({ type: 'danger', message: this.unbindLocation0 + "---" + res.msg });
+                        this.unbindLocation0 = '';
+                    }
+                })
+            } else {// 还是库位号
+                this.handleCheck(this.unbindLocation0);
+            }
+
+        },
+        handleCheck(data){
+            checkUnbindLocationIsValidByNo(data.toUpperCase()).then(res => {
+                    if (res.success) {
+                        this.checkunbindLocationFlag = true;
+                        Notify({ type: 'success', message: res.msg });
+                    } else {
+                        Notify({ type: 'danger', message: data + "---" + res.msg });
+                        this.unbindLocation0 = '';
+                    }
+                })
         },
         handleUnbindLocationData() {
             Dialog.confirm({

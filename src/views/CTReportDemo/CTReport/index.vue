@@ -66,11 +66,12 @@
                 <vxe-column title="操作" width="150" show-overflow fixed="right">
                     <template #default="{ row }">
                         <vxe-button type="text" icon="vxe-icon-edit" @click="editEvent(row)"></vxe-button>
-                        <!-- <vxe-button type="text" icon="vxe-icon-delete" @click="removeEvent(row)"></vxe-button> -->
+                        
                         <vxe-button v-if="row.ctReport.haveDetail === 'no'" type="text" icon="vxe-icon-upload"
                             @click="uploadDetail(row)"></vxe-button>
                         <vxe-button v-else-if="row.ctReport.haveDetail === 'yes'" type="text" icon="vxe-icon-eye-fill"
                             @click="eyeDetail(row)"></vxe-button>
+                        <vxe-button type="text" icon="vxe-icon-delete" @click="removeEvent(row)"></vxe-button>
                     </template>
                 </vxe-column>
             </vxe-table>
@@ -527,6 +528,7 @@ export default {
             const newRecord = {}
             const { row: newRow } = await $table.insert(newRecord)
             await $table.setActiveRow(newRow)
+            this.detailTableData = $table.getTableData().tableData;
         },
         async removeSelectDetailEvent() {
             const $table = this.$refs.detailTable
@@ -571,11 +573,15 @@ export default {
         async saveDetailEvent() {
             //debugger
             const $table = this.$refs.detailTable
-            console.log(this.detailTableData, $table.getTableData());
+            //console.log(this.detailTableData, $table.getTableData());
             const { insertRecords, removeRecords, updateRecords } = $table.getRecordset()
+           // console.log(insertRecords, removeRecords, updateRecords);
             if (insertRecords.length <= 0 && removeRecords.length <= 0 && updateRecords.length <= 0 && this.detailTableData.length <= 0) {
-                VXETable.modal.message({ content: '请上传数或者手动添加数据！', status: 'warning' })
+                VXETable.modal.message({ content: '请上传数据或者手动添加数据！', status: 'warning' })
                 return
+            }
+            if (updateRecords.length > 0) {
+                this.detailTableData = $table.getTableData().tableData;
             }
             const errMap = await $table.validate().catch(errMap => errMap)
             if (errMap) {
@@ -709,10 +715,18 @@ export default {
             this.showEdit = true
         },
         async removeEvent(row) {
-            const type = await VXETable.modal.confirm('您确定要删除该数据?')
-            const $table = this.$refs.xTable
+            console.log(row);
+            const type = await VXETable.modal.confirm(`您确定要删除[料号]:${row.ctReport.shippingNo}及详细明细数据，请注意！！！?`)
             if (type === 'confirm') {
-                $table.remove(row)
+                deleteCTReport(row.ctReport.ctRepeortId).then(res => {
+                        if (res.success) {
+                            VXETable.modal.message({ content: '删除成功', status: 'success' })
+                            this.fetchList();
+                        } else {
+                            VXETable.modal.message({ content: '删除失败'+res.msg, status: 'error' })
+                            this.fetchList();
+                        }
+                    })
             }
         },
         submitEvent() {
